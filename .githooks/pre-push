@@ -1,0 +1,4 @@
+#!/bin/sh
+# main only changes by merging a pull request (docs/process/pull-requests.md).
+# Enabled by `pnpm install` (the prepare script sets core.hooksPath).
+exec node scripts/pr-review.cli.ts pre-push

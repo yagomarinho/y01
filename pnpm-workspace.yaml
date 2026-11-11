@@ -1,0 +1,9 @@
+# A single package: this file only holds pnpm's settings.
+
+# Install scripts run only for the dependencies set to true here; a dependency
+# with a script and no entry fails the install. Neither of these needs its
+# script: @parcel/watcher and unrs-resolver get their native binary from the
+# optional per-platform packages.
+allowBuilds:
+  '@parcel/watcher': false
+  unrs-resolver: false

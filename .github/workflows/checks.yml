@@ -1,0 +1,40 @@
+# The checks of the code, on every pull request into main and on main after
+# each merge (docs/process/pull-requests.md). Only checks: no secrets, nothing
+# published. `checks` is a required check of the branch rules. No path filter
+# on purpose: a required check that does not run leaves the pull request
+# waiting forever.
+
+name: checks
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      # the version devEngines pins; pnpm refuses to run as another one
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12.6.0
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build

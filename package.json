@@ -1,0 +1,59 @@
+{
+  "name": "@y01/kernel",
+  "private": true,
+  "version": "0.0.0",
+  "description": "A functional kernel for AI agents: agnostic of infrastructure and application, with effects at the shell, extensible through plugins.",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "eslint .",
+    "prepare": "git config core.hooksPath .githooks",
+    "pr-review": "node scripts/pr-review.cli.ts",
+    "test": "jest --passWithNoTests",
+    "typecheck": "tsc --noEmit"
+  },
+  "author": {
+    "name": "Yago Marinho",
+    "email": "marinho.rj2@hotmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yagomarinho/y01.git"
+  },
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.6.0",
+      "onFail": "download"
+    }
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.36.0",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^22.0.0",
+    "eslint": "^9.36.0",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jest": "^29.0.1",
+    "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^16.4.0",
+    "jest": "^30.5.2",
+    "jest-environment-node": "^30.5.2",
+    "prettier": "^3.6.2",
+    "ts-jest": "^29.4.15",
+    "typescript": "6.0.3",
+    "typescript-eslint": "^8.70.1"
+  }
+}

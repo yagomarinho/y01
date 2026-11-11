@@ -1,0 +1,42 @@
+# The record of a pull request into main (docs/process/pull-requests.md): its
+# body, filled from .github/pull_request_template.md. A workflow of its own,
+# so that editing the title or the body re-runs only this check and never
+# cancels the code's checks. `pr-body` is a required check of the branch
+# rules. No secrets.
+
+name: pr-body
+
+on:
+  pull_request:
+    branches: [main]
+    # edited: a fix to the title or body re-runs the check
+    types: [opened, synchronize, reopened, edited]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-body-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pr-body:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # the rule comes from main, never from the PR's own branch: a PR cannot
+      # loosen the check that judges it
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .node-version
+      # the body is untrusted text: it reaches the shell only through an
+      # environment variable, never interpolated into the script
+      - name: Check the pull request body
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          printf '%s\n' "$PR_BODY" > "$RUNNER_TEMP/pr-body.md"
+          node scripts/pr-review.cli.ts check-body "$RUNNER_TEMP/pr-body.md"
